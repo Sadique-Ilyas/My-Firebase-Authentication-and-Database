@@ -11,4 +11,5 @@
     <string name="full_name">Full Name</string>
     <string name="logout">Logout</string>
     <string name="welcome_you_are_logged_in">Welcome ! You are logged in</string>
+    <string name="forgot_password"><u><i><b>Forgot Password ???</b></i></u></string>
 </resources>

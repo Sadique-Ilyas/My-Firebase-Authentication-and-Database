@@ -14,7 +14,7 @@ public class LoggedInHomeActivity extends Application
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        if (firebaseUser != null)
+        if (firebaseUser != null && firebaseUser.isEmailVerified())
         {
             Intent intent = new Intent(LoggedInHomeActivity.this,HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -7,6 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
+    android:id="@+id/loginActivity"
     tools:context=".LoginActivity">
 
     <EditText
@@ -36,6 +37,16 @@
         android:layout_margin="10dp"
         android:text="Sign In"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:onClick="forgotPassword"
+        android:padding="10dp"
+        android:text="@string/forgot_password"
+        android:gravity="end" />
 
     <TextView
         android:id="@+id/signUpTxt"

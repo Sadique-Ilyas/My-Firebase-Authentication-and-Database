@@ -84,8 +84,10 @@ public class SignUpActivity extends AppCompatActivity {
                                 if (task.isSuccessful())
                                 {
                                     progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(SignUpActivity.this, "Account Created !!!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(SignUpActivity.this,HomeActivity.class);
+                                    Toast.makeText(SignUpActivity.this, "Account Created !!!" +
+                                            "\nPlease Check your Email for Verification", Toast.LENGTH_LONG).show();
+                                    emailVerification();
+                                    Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
                                     startActivity(intent);
                                     finish();
                                     User user = new User(fullName,phoneNumber,email);
@@ -96,7 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful())
                                             {
-                                                Toast.makeText(SignUpActivity.this, "Data Saved !!!", Toast.LENGTH_SHORT).show();
+                                                //If Database  saved then Do Something
                                             }
                                             else
                                             {
@@ -121,6 +123,23 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
                 finish();
+            }
+        });
+    }
+
+    private void emailVerification()
+    {
+        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                {
+                    Toast.makeText(SignUpActivity.this, "Verification Email Sent !!!", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
