@@ -1,66 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".SignUpActivity">
+    tools:context=".SignUpActivity"
+    android:scrollbars="none">
 
-    <EditText
-        android:id="@+id/myFullName"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/full_name"
-        android:inputType="textPersonName" />
+        android:padding="20sp">
 
-    <EditText
-        android:id="@+id/myPhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/phone_number"
-        android:inputType="phone" />
+        <TextView
+            android:id="@+id/signUpHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:text="@string/sign_up"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textSize="50sp" />
 
-    <EditText
-        android:id="@+id/myEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/email"
-        android:inputType="textWebEmailAddress" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/myProfilePic"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/signUpHeading"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_profile_pic">
 
-    <EditText
-        android:id="@+id/myPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/password"
-        android:inputType="textWebPassword" />
+        </de.hdodenhof.circleimageview.CircleImageView>
 
-    <Button
-        android:id="@+id/createAccountBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/create_account"
-        android:textSize="20sp" />
+        <EditText
+            android:id="@+id/myFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myProfilePic"
+            android:layout_margin="10dp"
+            android:hint="@string/full_name"
+            android:inputType="textPersonName"/>
 
-    <TextView
-        android:id="@+id/signInTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="@string/already_have_an_account_sign_in_here"
-        android:textSize="15sp" />
+        <EditText
+            android:id="@+id/myPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myFullName"
+            android:layout_margin="10dp"
+            android:hint="@string/phone_number"
+            android:inputType="phone" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/myEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myPhoneNumber"
+            android:layout_margin="10dp"
+            android:hint="@string/email"
+            android:inputType="textWebEmailAddress" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/myPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myEmail"
+            android:layout_margin="10dp"
+            android:hint="@string/password"
+            android:inputType="textWebPassword" />
+
+        <Button
+            android:id="@+id/createAccountBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myPassword"
+            android:layout_margin="10dp"
+            android:text="@string/create_account"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/signInTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createAccountBtn"
+            android:layout_centerHorizontal="true"
+            android:padding="20dp"
+            android:text="@string/already_have_an_account_sign_in_here"
+            android:textSize="15sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signInTxt"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+</ScrollView>

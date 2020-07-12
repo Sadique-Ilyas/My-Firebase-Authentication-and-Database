@@ -1,10 +1,13 @@
 package com.example.myfirebaseauthenticationdatabase;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -13,29 +16,47 @@ import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText myFullName, myPhoneNumber, myEmail, myPassword;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private ImageView myProfilePic;
     private Button createAccountBtn;
+    private Uri mProfilePicUri;
     private TextView signInTxt;
     private ProgressBar progressBar;
+    private StorageReference storageReference;
+    private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        myProfilePic = findViewById(R.id.myProfilePic);
         myFullName = findViewById(R.id.myFullName);
         myPhoneNumber = findViewById(R.id.myPhoneNumber);
         myEmail = findViewById(R.id.myEmail);
@@ -45,6 +66,15 @@ public class SignUpActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         mAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference("Users");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        myProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
 
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,23 +127,45 @@ public class SignUpActivity extends AppCompatActivity {
                                     Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
                                     startActivity(intent);
                                     finish();
-                                    User user = new User(fullName,phoneNumber,email);
-                                    FirebaseDatabase.getInstance().getReference("Users")
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful())
-                                            {
-                                                //If Database  saved then Do Something
+                                    if (mProfilePicUri != null)
+                                    {
+                                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss");
+                                        String currentDateTime = simpleDateFormat.format(new Date());
+                                        final StorageReference fileReference = storageReference.child("IMG_" + currentDateTime + "." + getFileExtension(mProfilePicUri));
+                                        fileReference.putFile(mProfilePicUri)
+                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        Toast.makeText(SignUpActivity.this, "Profile Pic Saved", Toast.LENGTH_SHORT).show();
+
+                                                        Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                                                        while (!uri.isComplete());
+                                                        Uri url = uri.getResult();
+                                                        User user = new User(fullName,phoneNumber,email,url.toString());
+                                                        databaseReference
+                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful())
+                                                                {
+                                                                    Toast.makeText(SignUpActivity.this, "Profile info Saved !!!", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                                else
+                                                                {
+                                                                    progressBar.setVisibility(View.GONE);
+                                                                    Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
-                                            else
-                                            {
-                                                progressBar.setVisibility(View.GONE);
-                                                Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                                 else
                                 {
@@ -141,6 +193,33 @@ public class SignUpActivity extends AppCompatActivity {
         ss1.setSpan(underline,26,38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);;
         signInTxt.setText(ss1);
         signInTxt.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void openFileChooser()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null)
+        {
+            mProfilePicUri = data.getData();
+            Picasso.get().load(mProfilePicUri).into(myProfilePic);
+        }
+    }
+
+    private String getFileExtension(Uri uri)
+    {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void emailVerification()
