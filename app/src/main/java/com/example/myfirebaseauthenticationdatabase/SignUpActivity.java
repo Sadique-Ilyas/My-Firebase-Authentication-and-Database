@@ -143,7 +143,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                         Uri url = uri.getResult();
                                                         User user = new User(fullName,phoneNumber,email,url.toString());
                                                         databaseReference
-                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                                .child(mAuth.getCurrentUser().getUid())
                                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
