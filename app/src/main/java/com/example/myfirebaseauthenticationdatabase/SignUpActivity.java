@@ -4,7 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -118,13 +125,22 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         });
-        signInTxt.setOnClickListener(new View.OnClickListener() {
+        String signInText= "Already have an Account ? Sign In here";
+        SpannableString ss1 = new SpannableString(signInText);
+        StyleSpan bold_italic = new StyleSpan(Typeface.BOLD_ITALIC);
+        UnderlineSpan underline = new UnderlineSpan();
+        ClickableSpan clickableSpan1 = new ClickableSpan() {
             @Override
-            public void onClick(View v) {
+            public void onClick(@NonNull View widget) {
                 startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-                finish();
             }
-        });
+        };
+
+        ss1.setSpan(clickableSpan1,26,38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(bold_italic,26,38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(underline,26,38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);;
+        signInTxt.setText(ss1);
+        signInTxt.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void emailVerification()

@@ -1,7 +1,16 @@
 package com.example.myfirebaseauthenticationdatabase;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
     EditText loginEmail, loginPassword;
     Button loginBtn;
-    TextView signUpTxt;
+    TextView signUpTxt, forgotPasswwordTxt;
     FirebaseAuth mFirebaseAuth;
     FirebaseUser firebaseUser;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -35,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         loginEmail = findViewById(R.id.loginEmail);
         loginPassword = findViewById(R.id.loginPassword);
         loginBtn = findViewById(R.id.loginBtn);
+        forgotPasswwordTxt = findViewById(R.id.forgotPassword);
         signUpTxt = findViewById(R.id.signUpTxt);
 
         /*mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -112,19 +122,42 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        signUpTxt.setOnClickListener(new View.OnClickListener() {
+        String signUpText= "Don't have an Account ? Sign Up here";
+        SpannableString ss1 = new SpannableString(signUpText);
+        StyleSpan bold_italic = new StyleSpan(Typeface.BOLD_ITALIC);
+        UnderlineSpan underline = new UnderlineSpan();
+        ClickableSpan clickableSpan1 = new ClickableSpan() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            public void onClick(@NonNull View widget) {
+                startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
                 finish();
             }
-        });
+        };
+
+        ss1.setSpan(clickableSpan1,24,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(bold_italic,24,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(underline,24,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);;
+        signUpTxt.setText(ss1);
+        signUpTxt.setMovementMethod(LinkMovementMethod.getInstance());
+
+        String forgotText= "Forgot Password ???";
+        SpannableString ss = new SpannableString(forgotText);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                startActivity(new Intent(LoginActivity.this,ForgotPasswordActivity.class));
+            }
+        };
+
+        ss.setSpan(clickableSpan,0,19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        forgotPasswwordTxt.setText(ss);
+        forgotPasswwordTxt.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public void forgotPassword(View view)
+    /*public void forgotPassword(View view)
     {
         startActivity(new Intent(LoginActivity.this,ForgotPasswordActivity.class));
-    }
+    }*/
 
     /*@Override
     protected void onStart() {
