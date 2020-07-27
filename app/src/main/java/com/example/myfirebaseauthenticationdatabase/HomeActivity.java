@@ -21,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 public class HomeActivity extends AppCompatActivity {
@@ -67,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+                firebaseAuth.signOut();
                 Intent intent = new Intent(HomeActivity.this,LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -84,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    FirebaseAuth.getInstance().signOut();
+                    firebaseAuth.signOut();
                     Intent intent = new Intent(HomeActivity.this,LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

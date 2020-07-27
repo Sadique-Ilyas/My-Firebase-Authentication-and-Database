@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,12 +49,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null)
+                if (mFirebaseUser != null && mFirebaseUser.isEmailVerified())
                 {
-                    Toast.makeText(LoginActivity.this,"You are logged in (state) !!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,"You are logged in !!!(Auth Listener)",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    finish();
                 }
             }
         };*/
@@ -159,9 +159,12 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(LoginActivity.this,ForgotPasswordActivity.class));
     }*/
 
-    /*@Override
+    @Override
     protected void onStart() {
         super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }*/
+        if (firebaseUser != null && firebaseUser.isEmailVerified()) {
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            finish();
+        }
+    }
 }
