@@ -28,10 +28,11 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
     EditText loginEmail, loginPassword;
     Button loginBtn;
-    TextView signUpTxt, forgotPasswwordTxt;
+    TextView signUpTxt, forgotPasswordTxt;
     FirebaseAuth mFirebaseAuth;
     FirebaseUser firebaseUser;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         loginEmail = findViewById(R.id.loginEmail);
         loginPassword = findViewById(R.id.loginPassword);
         loginBtn = findViewById(R.id.loginBtn);
-        forgotPasswwordTxt = findViewById(R.id.forgotPassword);
+        forgotPasswordTxt = findViewById(R.id.forgotPassword);
         signUpTxt = findViewById(R.id.signUpTxt);
 
         /*mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -140,18 +141,18 @@ public class LoginActivity extends AppCompatActivity {
         signUpTxt.setText(ss1);
         signUpTxt.setMovementMethod(LinkMovementMethod.getInstance());
 
-        String forgotText= "Forgot Password ???";
+        String forgotText = "Forgot Password ???";
         SpannableString ss = new SpannableString(forgotText);
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                startActivity(new Intent(LoginActivity.this,ForgotPasswordActivity.class));
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
             }
         };
 
-        ss.setSpan(clickableSpan,0,19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        forgotPasswwordTxt.setText(ss);
-        forgotPasswwordTxt.setMovementMethod(LinkMovementMethod.getInstance());
+        ss.setSpan(clickableSpan, 0, 19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        forgotPasswordTxt.setText(ss);
+        forgotPasswordTxt.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     /*public void forgotPassword(View view)

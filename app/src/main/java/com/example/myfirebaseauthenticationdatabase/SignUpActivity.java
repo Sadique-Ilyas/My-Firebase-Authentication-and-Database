@@ -122,7 +122,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 if (mProfilePicUri != null) {
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss");
                                     String currentDateTime = simpleDateFormat.format(new Date());
-                                    final StorageReference fileReference = storageReference.child("IMG_" + currentDateTime + "." + getFileExtension(mProfilePicUri));
+                                    final StorageReference fileReference = storageReference.child(mAuth.getCurrentUser().getUid()).child("IMG_" + currentDateTime + "." + getFileExtension(mProfilePicUri));
                                     fileReference.putFile(mProfilePicUri)
                                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                 @Override
